@@ -32,6 +32,8 @@ task clean(type: Delete) {
 }
 
 ext.libs = [
+        preference_holder        : 'com.github.marcinmoskala:PreferenceHolder:1.4',
+        kotlinandroidviewbindings: 'com.github.MarcinMoskala:KotlinAndroidViewBindings:0.01',
         kotlin                   : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
         android_support          : ["com.android.support:support-v4:$android_version",
                                     "com.android.support:appcompat-v7:$android_version",
