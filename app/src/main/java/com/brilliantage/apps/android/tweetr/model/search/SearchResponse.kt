@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by gosullivan on 11/21/17.
  */
-data class Response(
+data class SearchResponse(
         @SerializedName("statuses")
         val statuses: List<Statuses>,
 
