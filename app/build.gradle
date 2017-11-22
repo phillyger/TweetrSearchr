@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.brilliantage.apps.android.tweetr"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'BASE_API_URL', '"https://api.twitter.com/1.1/"'
+        buildConfigField 'String', 'AUTH_END_POINT', '"https://api.twitter.com/oauth2/token"'
+        buildConfigField 'String', 'CONSUMER_KEY', '"BdGjhCSgAhwxFqx9aV0OdvYCZ"'
+        buildConfigField 'String', 'CONSUMER_SECRET', '"NXhm7rl2rioREtw8Y3UF373Yv87tOh5JJ5ZlV9pe88jQO8QGHj"'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+//    productFlavors {
+//        dev {}
+//        staging {}
+//        production {}
+//    }
+}
+
+
+
+dependencies {
+    compile libs.android_support
+    compile libs.retrofit
+    compile libs.rx
+    compile libs.kotlin
+    compile libs.dagger
+    compile libs.timber
+
+    annotationProcessor libs.dagger_annotation
+    
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile libs.junit
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
