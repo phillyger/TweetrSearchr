@@ -1,29 +1,26 @@
 package com.brilliantage.apps.android.tweetr.repositories.api
 
-
+import io.reactivex.Flowable
 import com.brilliantage.apps.android.tweetr.model.search.SearchResponse
 import com.brilliantage.apps.android.tweetr.model.search.token.AccessToken
-import retrofit2.Retrofit
-import com.brilliantage.apps.android.tweetr.repositories.providers.OAuthRetrofit
 import io.reactivex.Observable
+import retrofit2.http.*
 
 /**
  * Created by gosullivan on 11/22/17.
  */
-class TwitterApi {
-
-    private val tweetrService: TweetrService = makeTweetrApiService()
-
-    private fun makeTweetrApiService() : TweetrService {
-        val retrofit:Retrofit = OAuthRetrofit.get()
-        return retrofit.create(TweetrService::class.java);
-    }
-
-    fun searchTweets(query:String) : Observable<SearchResponse> =
-            tweetrService.searchTweets(query)
-
-    fun getToken(authorization:String, grantType:String) : Observable<AccessToken> =
-            tweetrService.getToken(authorization, grantType)
+interface TwitterApi {
 
 
+    @GET("search/tweets.json")
+    fun searchTweets(
+            @Query("q") query: String): Observable<SearchResponse>
+
+
+    @FormUrlEncoded
+    @POST("/oauth2/token")
+    fun getToken(
+            @Header("Authorization") authorization: String,
+            @Field("grant_type") grantType: String
+    ): Observable<AccessToken>
 }

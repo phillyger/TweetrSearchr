@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by gosullivan on 11/21/17.
  */
-object UnauthenticatedApi : Provider<Retrofit>({
+object UnauthenticatedRetrofit : Provider<Retrofit>({
     makeRetrofit()
 })
 

@@ -17,6 +17,8 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
     private val searchTweetsUseCase by lazy { SearchTweetsUseCase() }
 
+    private val fetchTokenUseCase by lazy { FetchTokenUseCase() }
+
     private val consumerKey:String = BuildConfig.CONSUMER_KEY
     private val consumerSecret:String = BuildConfig.CONSUMER_SECRET
 
@@ -50,7 +52,7 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
         val authorization = buildTokenAuthorizationString()
         Log.d("MainPresenter", "authorization: " + authorization)
-        subscriptions += searchTweetsUseCase.getToken(authorization)
+        subscriptions += fetchTokenUseCase.getToken(authorization)
                 .applySchedulers()
                 .smartSubscribe(
                         onSuccess = { (tokenType, accessToken) ->
