@@ -2,8 +2,7 @@ package com.brilliantage.apps.android.tweetr.repositories
 
 import com.brilliantage.apps.android.tweetr.model.search.SearchResponse
 import com.brilliantage.apps.android.tweetr.model.search.token.AccessToken
-import com.brilliantage.apps.android.tweetr.repositories.api.TweetrApi
-import io.reactivex.Flowable
+import com.brilliantage.apps.android.tweetr.repositories.api.TwitterApi
 import com.brilliantage.apps.android.tweetr.repositories.providers.Provider
 import io.reactivex.Observable
 
@@ -19,12 +18,12 @@ interface TweetrRepository {
 
         private val grantType = "client_credentials"
 
-        private val tweetrApi: TweetrApi = TweetrApi()
+        private val twitterApi: TwitterApi = TwitterApi()
 
 
-        override fun searchTweets(query: String): Observable<SearchResponse> = tweetrApi.searchTweets(query)
+        override fun searchTweets(query: String): Observable<SearchResponse> = twitterApi.searchTweets(query)
 
-        override fun getToken(authorization: String): Observable<AccessToken> = tweetrApi.getToken(authorization, grantType)
+        override fun getToken(authorization: String): Observable<AccessToken> = twitterApi.getToken(authorization, grantType)
     }
 
     companion object : Provider<TweetrRepository>({ TweetrDataRepository()})

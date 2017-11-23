@@ -9,7 +9,7 @@ import retrofit2.http.*
 /**
  * Created by gosullivan on 11/22/17.
  */
-interface TweetrApiService {
+interface TweetrService {
 
 
     @GET("search/tweets.json")
