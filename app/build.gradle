@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 26
@@ -14,8 +14,8 @@ android {
 
         buildConfigField 'String', 'BASE_API_URL', '"https://api.twitter.com/1.1/"'
         buildConfigField 'String', 'AUTH_END_POINT', '"https://api.twitter.com/oauth2/token"'
-        buildConfigField 'String', 'CONSUMER_KEY', '"BdGjhCSgAhwxFqx9aV0OdvYCZ"'
-        buildConfigField 'String', 'CONSUMER_SECRET', '"NXhm7rl2rioREtw8Y3UF373Yv87tOh5JJ5ZlV9pe88jQO8QGHj"'
+        buildConfigField 'String', 'CONSUMER_KEY', '"aWULKIDfBlsuZUOTOAe73GY9x"'
+        buildConfigField 'String', 'CONSUMER_SECRET', '"D2PxP2zHPjwAo38oyZgrIdArBNnQwXboGZJZcmUIvh5PAgI0cd"'
     }
 
     buildTypes {
@@ -43,6 +43,8 @@ dependencies {
     compile libs.kotlin
     compile libs.dagger
     compile libs.timber
+    compile libs.activitystarter
+    kapt libs.activitystarter_kapt
 
     annotationProcessor libs.dagger_annotation
 
