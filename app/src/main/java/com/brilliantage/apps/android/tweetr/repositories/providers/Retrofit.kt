@@ -2,6 +2,7 @@ package com.brilliantage.apps.android.tweetr.repositories.providers
 
 import com.brilliantage.apps.android.tweetr.BuildConfig
 import com.brilliantage.apps.android.tweetr.repositories.providers.extension.addCallAdapters
+import com.brilliantage.apps.android.tweetr.repositories.providers.extension.addConverters
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,6 +23,7 @@ object OAuthRetrofit : Provider<Retrofit>({
 fun makeRetrofit(vararg interceptors: Interceptor) = Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_API_URL)
         .client(makeHttpClient(interceptors))
+        .addConverters()
         .addCallAdapters()
         .build()
 
