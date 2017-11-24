@@ -13,7 +13,9 @@ import io.reactivex.Observable
  */
 class TweetrService {
 
-    private val twitterApi: TwitterApi = makeTweetrOauthService()
+    private val oathTwitterApi: TwitterApi by lazy { makeTweetrOauthService() }
+
+    private val unauthenticatedTwitterApi: TwitterApi by lazy { makeTweetrUnauthenticatedService() }
 
     private fun makeTweetrOauthService() : TwitterApi {
         val retrofit:Retrofit = OAuthRetrofit.get()
@@ -26,10 +28,10 @@ class TweetrService {
     }
 
     fun searchTweets(query:String) : Observable<SearchResponse> =
-            twitterApi.searchTweets(query)
+            oathTwitterApi.searchTweets(query)
 
     fun getToken(authorization:String, grantType:String) : Observable<AccessToken> =
-            twitterApi.getToken(authorization, grantType)
+            unauthenticatedTwitterApi.getToken(authorization, grantType)
 
 
 }
