@@ -12,13 +12,13 @@ import retrofit2.http.*
 interface TwitterApi {
 
 
-    @GET("search/tweets.json")
+    @GET("1.1/search/tweets.json")
     fun searchTweets(
             @Query("q") query: String): Observable<SearchResponse>
 
 
     @FormUrlEncoded
-    @POST("/oauth2/token")
+    @POST("oauth2/token")
     fun getToken(
             @Header("Authorization") authorization: String,
             @Field("grant_type") grantType: String

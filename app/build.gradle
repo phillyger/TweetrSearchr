@@ -12,14 +12,18 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'BASE_API_URL', '"https://api.twitter.com/1.1/"'
+        buildConfigField 'String', 'BASE_API_URL', '"https://api.twitter.com/"'
         buildConfigField 'String', 'AUTH_END_POINT', '"https://api.twitter.com/oauth2/token"'
         buildConfigField 'String', 'CONSUMER_KEY', '"aWULKIDfBlsuZUOTOAe73GY9x"'
         buildConfigField 'String', 'CONSUMER_SECRET', '"D2PxP2zHPjwAo38oyZgrIdArBNnQwXboGZJZcmUIvh5PAgI0cd"'
     }
 
     buildTypes {
+        debug {
+            buildConfigField "Boolean", "DEBUG_MODE", "true"
+        }
         release {
+            buildConfigField "Boolean", "DEBUG_MODE", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
