@@ -15,6 +15,7 @@ import com.brilliantage.apps.android.tweetr.utils.smartSubscribe
  */
 open class MainPresenter(val view: MainView) : RxPresenter() {
 
+    private val TAG = MainPresenter::class.java.name
     private val searchTweetsUseCase by lazy { SearchTweetsUseCase() }
 
     private val fetchTokenUseCase by lazy { FetchTokenUseCase() }
@@ -35,12 +36,12 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
         subscriptions += searchTweetsUseCase.searchTweets("123'")
                 .applySchedulers()
                 .smartSubscribe(
-//                        onStart = { view.progressVisible = true },
+                        onStart = { Log.d(TAG , "onStart") },
                         onSuccess = { (tweets, metadata) ->
                             view.display(tweets, metadata)
                         },
-                        onError = view::showError
-//                        onFinish = { view.progressVisible = false }
+                        onError = view::showError,
+                        onFinish = { Log.d(TAG , "onFinish") }
                 )
 
     }
@@ -55,13 +56,20 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
         subscriptions += fetchTokenUseCase.getToken(authorization)
                 .applySchedulers()
                 .smartSubscribe(
+                        onStart = { Log.d(TAG , "onStart") },
                         onSuccess = { (tokenType, accessToken) ->
                             // write the token to the preferences - don't do this in production app!!
-                            Pref.token = accessToken
+
+                            Log.d(TAG , "tokenType is $tokenType")
+                            Log.d(TAG , "accessToken is $accessToken")
+//                            Pref.token = accessToken
 
                             // call searchTweets
-                            searchTweets()
-                        }
+//                            searchTweets()
+                        },
+                        onError = view::showError,
+                        onFinish = { Log.d(TAG , "onFinish") }
+
                 )
     }
 
@@ -69,7 +77,7 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
         val inputValue:String = consumerKey+":"+consumerSecret
         Log.d("MainPresenter", "inputValue: " + inputValue)
-        val valueEncoded = String(Base64.encode(inputValue.toByteArray(), Base64.DEFAULT))
+        val valueEncoded = String(Base64.encode(inputValue.toByteArray(), Base64.NO_WRAP))
 
         return "Basic " + valueEncoded
 
