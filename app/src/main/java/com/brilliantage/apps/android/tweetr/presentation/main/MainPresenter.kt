@@ -23,22 +23,28 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
     private val consumerKey:String = BuildConfig.CONSUMER_KEY
     private val consumerSecret:String = BuildConfig.CONSUMER_SECRET
 
+    private val isAccessTokenAvailable : Boolean
+        get() = !Pref.token.isNullOrBlank()
+
 //    private var query:String? = view.query
 
     override fun onStart() {
 
-        view.searchButtonClickedCallback = { if(Pref.token.isNullOrBlank()) getToken() else searchTweets() }
+        view.searchButtonClickedCallback = { if(isAccessTokenAvailable) searchTweets() else getToken()}
     }
 
     private fun searchTweets() {
 
         Log.d("MainPresenter", "searchTweets")
-        subscriptions += searchTweetsUseCase.searchTweets("123'")
+        subscriptions += searchTweetsUseCase.searchTweets("%23u2'")
                 .applySchedulers()
                 .smartSubscribe(
                         onStart = { Log.d(TAG , "onStart") },
                         onSuccess = { (tweets, metadata) ->
-                            view.display(tweets, metadata)
+
+                            Log.d(TAG , "tweet count is ${tweets.size}")
+                            Log.d(TAG , "next results are ${metadata.nextResults}")
+//                            view.display(tweets, metadata)
                         },
                         onError = view::showError,
                         onFinish = { Log.d(TAG , "onFinish") }
@@ -62,13 +68,18 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
                             Log.d(TAG , "tokenType is $tokenType")
                             Log.d(TAG , "accessToken is $accessToken")
-//                            Pref.token = accessToken
+                            Pref.token = accessToken
 
-                            // call searchTweets
-//                            searchTweets()
+
                         },
                         onError = view::showError,
-                        onFinish = { Log.d(TAG , "onFinish") }
+                        onFinish = {
+                            Log.d(TAG , "onFinish")
+                            if (isAccessTokenAvailable) {
+                                // call searchTweets
+                                searchTweets()
+                            }
+                        }
 
                 )
     }
@@ -82,5 +93,9 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
         return "Basic " + valueEncoded
 
     }
+
+
+
+
 
 }
