@@ -2,10 +2,15 @@ package com.brilliantage.apps.android.tweetr.utils
 
 import android.content.Context
 import android.graphics.drawable.AnimationDrawable
+import android.support.annotation.LayoutRes
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.GlideBuilder
 
 /**
  * Created by gosullivan on 11/22/17.
@@ -41,3 +46,14 @@ fun ImageView.playAnimation() {
 }
 
 fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+
+
+fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
+    return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
+}
+
+fun ImageView.loadUrl(url:String){
+    Glide.with(context)
+            .load(url)
+            .into(this)
+}
