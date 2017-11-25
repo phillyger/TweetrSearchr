@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  */
 data class SearchResponse(
         @SerializedName("statuses")
-        val statuses: List<Statuses>,
+        val statusList: List<Status>,
 
         @SerializedName("search_metadata")
         val searchMetadata: SearchMetadata
