@@ -3,9 +3,12 @@ package com.brilliantage.apps.android.tweetr.presentation.main
 import android.util.Base64
 import android.util.Log
 import com.brilliantage.apps.android.tweetr.BuildConfig
+import com.brilliantage.apps.android.tweetr.model.search.Metadata
+import com.brilliantage.apps.android.tweetr.model.search.SearchMetadata
 import com.brilliantage.apps.android.tweetr.presentation.base.RxPresenter
 import com.brilliantage.apps.android.tweetr.repositories.providers.Pref
 import com.brilliantage.apps.android.tweetr.utils.applySchedulers
+import com.brilliantage.apps.android.tweetr.model.search.Status
 
 import com.brilliantage.apps.android.tweetr.utils.smartSubscribe
 
@@ -26,28 +29,46 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
     private val isAccessTokenAvailable : Boolean
         get() = !Pref.token.isNullOrBlank()
 
+    private var statusList:ArrayList<Status> = ArrayList<Status>()
+    private var metaData: SearchMetadata? = null
+
+
+    var isLoadingData:Boolean = false
+
 //    private var query:String? = view.query
 
     override fun onStart() {
 
-        view.searchButtonClickedCallback = { if(isAccessTokenAvailable) searchTweets() else getToken()}
+//        view.searchButtonClickedCallback = { if(isAccessTokenAvailable) searchTweets() else getToken()}
+
+        if(isAccessTokenAvailable) searchTweets("%23r.e.m'") else getToken()
     }
 
-    private fun searchTweets() {
+    private fun searchTweets(query:String) {
 
+        isLoadingData = true
         Log.d("MainPresenter", "searchTweets")
-        subscriptions += searchTweetsUseCase.searchTweets("%23u2'")
+        subscriptions += searchTweetsUseCase.searchTweets(query)
                 .applySchedulers()
                 .smartSubscribe(
                         onStart = { Log.d(TAG , "onStart") },
-                        onSuccess = { (tweets, metadata) ->
+                        onSuccess = { (searchStatuses, searchMetadata) ->
 
-                            Log.d(TAG , "tweet count is ${tweets.size}")
-                            Log.d(TAG , "next results are ${metadata.nextResults}")
-//                            view.display(tweets, metadata)
+                            Log.d(TAG, "metadata nextresults:" + searchMetadata.nextResults)
+                            setStatusList(searchStatuses)
+                            setMetadata(searchMetadata)
+                            // add new results to list
+
+//                            Log.d(TAG , "tweet count is ${statusList.size}")
+//                            Log.d(TAG , "next results are ${metadata.nextResults}")
+
+
                         },
                         onError = view::showError,
-                        onFinish = { Log.d(TAG , "onFinish") }
+                        onFinish = { // send results back to the view object
+                            isLoadingData = false
+                            view.updateUI()
+                             }
                 )
 
     }
@@ -77,7 +98,7 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
                             Log.d(TAG , "onFinish")
                             if (isAccessTokenAvailable) {
                                 // call searchTweets
-                                searchTweets()
+                                searchTweets("%23u2'")
                             }
                         }
 
@@ -94,8 +115,35 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
     }
 
+    // status list methods
+    fun getStatusListCount():Int {
+        return statusList.size
+    }
 
+    private fun setStatusList(list: List<Status>) {
+        statusList.addAll(list)
+    }
 
+    fun getStatusList():List<Status> = statusList
 
+    // meta data
+    private fun setMetadata(searchMetadata: SearchMetadata) {
+        metaData = searchMetadata
+    }
+
+    fun getMetadata():SearchMetadata = metaData!!
+
+    fun loadMoreTweets() {
+
+        metaData?.let {
+            Log.d(TAG, "nextResults: " + it.nextResults)
+            if (!it.nextResults.isNullOrBlank()) {
+                val query =  it.nextResults.substring(startIndex = 1)
+                Log.d(TAG, "query: " + it.nextResults.substring(startIndex = 1))
+                searchTweets(query)
+            }
+        }
+
+    }
 
 }
