@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 26
@@ -47,6 +48,8 @@ dependencies {
     compile libs.kotlin
     compile libs.dagger
     compile libs.timber
+    compile libs.glide
+    compile libs.circleimageview
     compile libs.activitystarter
     kapt libs.activitystarter_kapt
 
