@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by gosullivan on 11/21/17.
  */
-data class Statuses(
+data class Status(
 
         @SerializedName("metadata")
         val metadata: Metadata,
