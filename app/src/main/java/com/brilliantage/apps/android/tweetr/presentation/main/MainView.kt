@@ -1,7 +1,8 @@
 package com.brilliantage.apps.android.tweetr.presentation.main
 
+import android.support.v7.widget.RecyclerView
 import com.brilliantage.apps.android.tweetr.model.search.SearchMetadata
-import com.brilliantage.apps.android.tweetr.model.search.Statuses
+import com.brilliantage.apps.android.tweetr.model.search.Status
 import com.brilliantage.apps.android.tweetr.presentation.base.BaseView
 
 /**
@@ -13,8 +14,16 @@ interface MainView : BaseView {
 
 //    var query: String
 
-    var searchButtonClickedCallback: ()->Unit
+//    var statusList: List<Status>
 
-    fun display(tweets: List<Statuses>, metadata: SearchMetadata)
+//    var meataData: SearchMetadata
+
+//    var searchResults: RecyclerView
+
+
+//    var searchButtonClickedCallback: ()->Unit
+
+//    fun updateUI(statusList: List<Status>, metadata: SearchMetadata)
+    fun updateUI()
 
 }
