@@ -14,7 +14,9 @@ interface TwitterApi {
 
     @GET("1.1/search/tweets.json")
     fun searchTweets(
-            @Query("q") query: String): Observable<SearchResponse>
+            @Query("q") query: String,
+            @Query("max_id") maxId: String?,
+            @Query("include_entities") includeEntities:Boolean?): Observable<SearchResponse>
 
 
     @FormUrlEncoded

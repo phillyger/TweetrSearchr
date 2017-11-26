@@ -11,7 +11,7 @@ import io.reactivex.Observable
  */
 interface TweetrRepository {
 
-    fun searchTweets(query:String): Observable<SearchResponse>
+    fun searchTweets(query:String, maxId:String?, includeEntities: Boolean?): Observable<SearchResponse>
     fun getToken(authorization:String): Observable<AccessToken>
 
     class TweetrDataRepository : TweetrRepository {
@@ -21,7 +21,7 @@ interface TweetrRepository {
         private val tweetrService: TweetrService = TweetrService()
 
 
-        override fun searchTweets(query: String): Observable<SearchResponse> = tweetrService.searchTweets(query)
+        override fun searchTweets(query:String, maxId:String?, includeEntities: Boolean?): Observable<SearchResponse> = tweetrService.searchTweets(query, maxId, includeEntities)
 
         override fun getToken(authorization: String): Observable<AccessToken> = tweetrService.getToken(authorization, grantType)
     }

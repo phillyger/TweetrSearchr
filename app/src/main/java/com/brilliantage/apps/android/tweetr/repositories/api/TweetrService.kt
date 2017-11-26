@@ -27,8 +27,8 @@ class TweetrService {
         return retrofit.create(TwitterApi::class.java);
     }
 
-    fun searchTweets(query:String) : Observable<SearchResponse> =
-            oathTwitterApi.searchTweets(query)
+    fun searchTweets(query:String, maxId:String?, includeEntities: Boolean?) : Observable<SearchResponse> =
+            oathTwitterApi.searchTweets(query, maxId, includeEntities)
 
     fun getToken(authorization:String, grantType:String) : Observable<AccessToken> =
             unauthenticatedTwitterApi.getToken(authorization, grantType)

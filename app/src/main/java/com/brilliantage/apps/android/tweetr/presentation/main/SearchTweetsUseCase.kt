@@ -9,6 +9,6 @@ class SearchTweetsUseCase {
 
     val tweetRepository by TweetrRepository.lazyGet()
 
-    fun searchTweets(query:String) = tweetRepository.searchTweets(query)
+    fun searchTweets(query:String, maxId:String?, includeEntities: Boolean?) = tweetRepository.searchTweets(query, maxId, includeEntities)
 
 }
