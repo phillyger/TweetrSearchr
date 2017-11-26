@@ -10,20 +10,6 @@ import com.brilliantage.apps.android.tweetr.presentation.base.BaseView
  */
 interface MainView : BaseView {
 
-//    var progressVisible: Boolean
-
-//    var query: String
-
-//    var statusList: List<Status>
-
-//    var meataData: SearchMetadata
-
-//    var searchResults: RecyclerView
-
-
-//    var searchButtonClickedCallback: ()->Unit
-
-//    fun updateUI(statusList: List<Status>, metadata: SearchMetadata)
-    fun updateUI()
+    fun updateUI(positionStart:Int, itemCount:Int)
 
 }
