@@ -77,8 +77,9 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
                             val itemCount:Int = searchStatuses.size
 
                             // only insert if items have been returned.
-                            if (itemCount > 0)
-                                view.updateUI(positionStart, itemCount)
+                            view.updateUI(positionStart, itemCount)
+
+
 
                         },
                         onError = view::showError,

@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import com.brilliantage.apps.android.tweetr.R
 import com.brilliantage.apps.android.tweetr.presentation.base.PresenterBaseActivity
+import com.brilliantage.apps.android.tweetr.utils.toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -73,11 +74,15 @@ class MainActivity : PresenterBaseActivity(), MainView {
         // hide progress
         progressView.visibility = View.INVISIBLE
 
-        // Update the search adapter dataset on the main UI thread
-        runOnUiThread {
-            searchAdapter.notifyItemRangeInserted(positionStart,itemCount)
+        if (itemCount > 0) {
+            // Update the search adapter dataset on the main UI thread
+            runOnUiThread {
+                searchAdapter.notifyItemRangeInserted(positionStart, itemCount)
 
 
+            }
+        } else {
+            showNoResultsFound()
         }
     }
 
@@ -174,7 +179,9 @@ class MainActivity : PresenterBaseActivity(), MainView {
             emptyView.visibility = View.INVISIBLE
             searchResultsView.visibility = View.VISIBLE
         }
+    }
 
-
+    fun showNoResultsFound() {
+        toast("No Results Found")
     }
 }
