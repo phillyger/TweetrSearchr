@@ -21,14 +21,10 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 class MainActivity : PresenterBaseActivity(), MainView {
 
-    val TAG:String = "MainActivity"
+    private val TAG:String = MainActivity::class.java.simpleName
 
     private lateinit var searchAdapter: SearchAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
-
-
-
-//    override var query: String by bindToEditText(R.id.query)
 
     val mainPresenter by presenter { MainPresenter(this) }
 
@@ -40,10 +36,9 @@ class MainActivity : PresenterBaseActivity(), MainView {
         initView()
     }
 
-
     /*
-    * Initialize the recycler view
-    * */
+        * Initialize the recycler view
+        * */
     private fun initView() {
         linearLayoutManager = LinearLayoutManager(this)
 
@@ -54,6 +49,10 @@ class MainActivity : PresenterBaseActivity(), MainView {
         setRecyclerViewScrollListener(linearLayoutManager)
     }
 
+    override fun onStart() {
+        super.onStart()
+        shouldShowEmptyView()
+    }
     /*
      * Initialize the toolbar
      * */
@@ -68,6 +67,8 @@ class MainActivity : PresenterBaseActivity(), MainView {
     * */
     override fun updateUI(positionStart:Int, itemCount:Int) {
         // Update the search adapter dataset on the main UI thread
+
+        shouldShowEmptyView()
 
         progressView.visibility = View.INVISIBLE
         searchResultsView.visibility = View.VISIBLE
@@ -152,5 +153,12 @@ class MainActivity : PresenterBaseActivity(), MainView {
 
         })
 
+    }
+
+    /*
+    *  Determine if we should show empty.
+    * */
+    fun shouldShowEmptyView() {
+        emptyView.visibility = if ((mainPresenter as MainPresenter).getStatusListCount() == 0) View.VISIBLE else View.INVISIBLE
     }
 }
