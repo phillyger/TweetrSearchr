@@ -137,12 +137,17 @@ class MainActivity : PresenterBaseActivity(), MainView {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
 
+                // set the visibility parameters
                 progressView.visibility = View.VISIBLE
                 searchResultsView.visibility = View.INVISIBLE
+                emptyView.visibility = View.INVISIBLE
 
-                Log.d(TAG,"Search Text: $query")
+                // reset the search objects
                 (mainPresenter as MainPresenter).resetSearch()
+
+                // perform a new search
                 (mainPresenter as MainPresenter).searchTweets(query, null, null)
+
                 return false
             }
 
