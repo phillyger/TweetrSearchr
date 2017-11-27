@@ -5,7 +5,7 @@ A sample app, written in Kotlin, to allow a user to search for specific tweets b
 
 ## Features
 
-- MVP approach based upon Marcin Moskala's [SimpleKotlinMvpBoilerplate](https://github.com/MarcinMoskala/SimpleKotlinMvpBoilerplate) repo. His book, [Android Development with Kotlin](https://www.amazon.com/Android-Development-Kotlin-Marcin-Moskala/dp/1787123685) is worth checking out too.
+- MVP approach based upon Marcin Moskala's [SimpleKotlinMvpBoilerplate](https://github.com/MarcinMoskala/SimpleKotlinMvpBoilerplate) repo. His book, [Android Development with Kotlin](https://www.amazon.com/Android-Development-Kotlin-Marcin-Moskala/dp/1787123685) is worth checking out.
 - Infinite scroll on the recycler view thanks to [this](https://guides.codepath.com/android/Endless-Scrolling-with-AdapterViews-and-RecyclerView) article.
 
 
