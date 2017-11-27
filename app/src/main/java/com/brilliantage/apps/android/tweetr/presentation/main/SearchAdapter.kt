@@ -40,22 +40,11 @@ class SearchAdapter(private val mainPresenter: MainPresenter) : RecyclerView.Ada
 
         fun bindStatus(status: Status) {
             this.status = status
-            Log.d(TAG, "status.user.profileImageUrl: " + status.user.profileImageUrl  )
+
             view.userProfileImageView.loadUrl(status.user.profileImageUrl)
-
-            Log.d(TAG,"status.user.name: " + status.user.name)
-
             view.userNameView.text = status.user.name
-
-            Log.d(TAG,"status.user.screenName: " + status.user.screenName)
             view.userScreenNameView.text = status.user.screenName
-
             view.mainTextView.text = status.text
-        }
-
-        companion object {
-            //5
-            private val STATUS_KEY = "STATUS"
         }
     }
 }
