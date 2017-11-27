@@ -1,6 +1,6 @@
 # TweetrSearchr
 
-A sample app, written in Kotlin, to allow a user to search for specific tweets based upon keywords or hashtags and present a list of results.
+A sample app, written in Kotlin, to allow a user to search for tweets based upon keywords or hashtags.
 
 
 ## Features
