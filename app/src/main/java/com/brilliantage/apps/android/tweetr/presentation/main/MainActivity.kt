@@ -66,13 +66,14 @@ class MainActivity : PresenterBaseActivity(), MainView {
     * Update the UI with the new result set
     * */
     override fun updateUI(positionStart:Int, itemCount:Int) {
-        // Update the search adapter dataset on the main UI thread
 
+        // determine if
         shouldShowEmptyView()
 
+        // hide progress
         progressView.visibility = View.INVISIBLE
-        searchResultsView.visibility = View.VISIBLE
 
+        // Update the search adapter dataset on the main UI thread
         runOnUiThread {
             searchAdapter.notifyItemRangeInserted(positionStart,itemCount)
 
@@ -159,6 +160,16 @@ class MainActivity : PresenterBaseActivity(), MainView {
     *  Determine if we should show empty.
     * */
     fun shouldShowEmptyView() {
-        emptyView.visibility = if ((mainPresenter as MainPresenter).getStatusListCount() == 0) View.VISIBLE else View.INVISIBLE
+
+        if ((mainPresenter as MainPresenter).getStatusListCount() == 0)
+        {
+            emptyView.visibility = View.VISIBLE
+            searchResultsView.visibility = View.INVISIBLE
+        } else {
+            emptyView.visibility = View.INVISIBLE
+            searchResultsView.visibility = View.VISIBLE
+        }
+
+
     }
 }
