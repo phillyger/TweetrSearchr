@@ -43,5 +43,14 @@
         android:scrollbars="vertical" />
 
 
+    <!--Display if list is empty-->
+    <TextView android:id="@+id/emptyView"
+         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+
+        android:textAlignment="center"
+        android:text="@string/empty_result_set" />
+
 </android.support.design.widget.CoordinatorLayout>
 
