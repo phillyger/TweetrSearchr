@@ -8,7 +8,7 @@ import com.brilliantage.apps.android.tweetr.utils.toast
  */
 abstract class PresenterBaseActivity: BaseActivity(), BaseView {
 
-    fun presenter(init: () -> Presenter) = lazy { init() }
+    fun <T:Presenter> presenter(init: () -> T) = lazy { init() }
             .also { lazyPresenters += it }
 
     private var lazyPresenters: List<Lazy<Presenter>> = emptyList()
