@@ -13,7 +13,6 @@ import android.view.MenuItem
 import android.view.View
 import com.brilliantage.apps.android.tweetr.R
 import com.brilliantage.apps.android.tweetr.presentation.base.PresenterBaseActivity
-import com.brilliantage.apps.android.tweetr.utils.toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -22,10 +21,14 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 class MainActivity : PresenterBaseActivity(), MainView {
 
-    private val TAG:String = MainActivity::class.java.simpleName
+    private val TAG: String = MainActivity::class.java.simpleName
 
     private lateinit var searchAdapter: SearchAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
+
+
+    override var query: String = ""
+        set(value) { field = value }
 
     val mainPresenter by presenter { MainPresenter(this) }
 
@@ -43,53 +46,65 @@ class MainActivity : PresenterBaseActivity(), MainView {
     private fun initView() {
         linearLayoutManager = LinearLayoutManager(this)
 
-        searchAdapter = SearchAdapter(mainPresenter as MainPresenter)
+        searchAdapter = SearchAdapter(mainPresenter)
         searchResultsView.adapter = searchAdapter
         searchResultsView.layoutManager = linearLayoutManager
 
         setRecyclerViewScrollListener(linearLayoutManager)
     }
 
-    override fun onStart() {
-        super.onStart()
-        shouldShowEmptyView()
-    }
     /*
-     * Initialize the toolbar
-     * */
+    * Initialize the toolbar
+    * */
     private fun initToolbar() {
         val toolbar = toolbar as Toolbar
         setSupportActionBar(toolbar)
     }
 
 
+    override fun onStart() {
+        super.onStart()
+        shouldShowEmptyView()
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(OUTSTATE_QUERY, query)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val result:String? = try {savedInstanceState.getString(OUTSTATE_QUERY) } catch (e:Exception) { null }
+
+        result?.let {
+            query = it
+            mainPresenter.searchTweets(it, null, null)
+        }
+
+    }
+
     /*
     * Update the UI with the new result set
     * */
-    override fun updateUI(positionStart:Int, itemCount:Int) {
+    override fun updateUI(positionStart: Int, itemCount: Int) {
+        // Update the search adapter dataset on the main UI thread
 
-        // determine if
         shouldShowEmptyView()
 
-        // hide progress
         progressView.visibility = View.INVISIBLE
-
-        if (itemCount > 0) {
-            // Update the search adapter dataset on the main UI thread
-            runOnUiThread {
-                searchAdapter.notifyItemRangeInserted(positionStart, itemCount)
+        searchResultsView.visibility = View.VISIBLE
 
 
-            }
-        } else {
-            showNoResultsFound()
-        }
+        searchAdapter.notifyItemRangeInserted(positionStart, itemCount)
+
+
     }
 
     /*
     *  Sets a listener on the recyclerview scroll event
     * */
-    private fun setRecyclerViewScrollListener(layoutMgr:LinearLayoutManager) {
+    private fun setRecyclerViewScrollListener(layoutMgr: LinearLayoutManager) {
 
         searchResultsView.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutMgr) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
@@ -110,7 +125,7 @@ class MainActivity : PresenterBaseActivity(), MainView {
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
 
-        (mainPresenter as MainPresenter).loadMoreTweets()
+        mainPresenter.loadMoreTweets()
     }
 
     /*
@@ -120,10 +135,10 @@ class MainActivity : PresenterBaseActivity(), MainView {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        val search:MenuItem? = menu?.findItem(R.id.search) as? MenuItem
+        val search: MenuItem = menu?.findItem(R.id.search) as MenuItem
 
         search?.let {
-            val searchView:SearchView? = MenuItemCompat.getActionView(it) as? SearchView
+            val searchView: SearchView? = MenuItemCompat.getActionView(it) as? SearchView
             searchView?.let {
                 it.setQuery("", false)
                 search(it)
@@ -142,22 +157,18 @@ class MainActivity : PresenterBaseActivity(), MainView {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
 
-                // set the visibility parameters
                 progressView.visibility = View.VISIBLE
                 searchResultsView.visibility = View.INVISIBLE
-                emptyView.visibility = View.INVISIBLE
 
-                // reset the search objects
-                (mainPresenter as MainPresenter).resetSearch()
-
-                // perform a new search
-                (mainPresenter as MainPresenter).searchTweets(query, null, null)
-
+                Log.d(TAG, "Search Text: $query")
+                mainPresenter.resetSearch()
+                mainPresenter.searchTweets(query, null, null)
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                Log.d(TAG,"Search Text: $newText")
+                Log.d(TAG, "Search Text: $newText")
+                query = newText
                 return true
             }
 
@@ -170,18 +181,13 @@ class MainActivity : PresenterBaseActivity(), MainView {
     *  Determine if we should show empty.
     * */
     fun shouldShowEmptyView() {
-
-        if ((mainPresenter as MainPresenter).getStatusListCount() == 0)
-        {
-            emptyView.visibility = View.VISIBLE
-            searchResultsView.visibility = View.INVISIBLE
-        } else {
-            emptyView.visibility = View.INVISIBLE
-            searchResultsView.visibility = View.VISIBLE
-        }
+        emptyView.visibility = if (mainPresenter.getStatusListCount() == 0) View.VISIBLE else View.INVISIBLE
     }
 
-    fun showNoResultsFound() {
-        toast("No Results Found")
+
+    companion object {
+        private val OUTSTATE_QUERY = "Query"
     }
+
+
 }
