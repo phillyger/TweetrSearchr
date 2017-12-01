@@ -7,12 +7,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.brilliantage.apps.android.tweetr.R
 import com.brilliantage.apps.android.tweetr.presentation.base.PresenterBaseActivity
+import com.marcinmoskala.kotlinandroidviewbindings.bindToVisibility
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -25,6 +24,9 @@ class MainActivity : PresenterBaseActivity(), MainView {
 
     private lateinit var searchAdapter: SearchAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
+
+    override var progressBar by bindToVisibility(R.id.progressView)
+    override var emptyResults by bindToVisibility(R.id.emptyResultsView)
 
 
     override var query: String = ""
@@ -64,7 +66,6 @@ class MainActivity : PresenterBaseActivity(), MainView {
 
     override fun onStart() {
         super.onStart()
-        shouldShowEmptyView()
     }
 
 
@@ -88,16 +89,9 @@ class MainActivity : PresenterBaseActivity(), MainView {
     * Update the UI with the new result set
     * */
     override fun updateUI(positionStart: Int, itemCount: Int) {
-        // Update the search adapter dataset on the main UI thread
-
-        // TODO Remove these calls. Presenter should determine how this is handled.
-        shouldShowEmptyView()
-        progressView.visibility = View.INVISIBLE
-        searchResultsView.visibility = View.VISIBLE
 
         // TODO Refactor this code!!
         searchAdapter.notifyItemRangeInserted(positionStart, itemCount)
-
 
     }
 
@@ -156,18 +150,12 @@ class MainActivity : PresenterBaseActivity(), MainView {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-
-                progressView.visibility = View.VISIBLE
-                searchResultsView.visibility = View.INVISIBLE
-
-                Log.d(TAG, "Search Text: $query")
-                mainPresenter.resetSearch()
+                mainPresenter.clearSearchResults()
                 mainPresenter.searchTweets(query, null, null)
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                Log.d(TAG, "Search Text: $newText")
                 query = newText
                 return true
             }
@@ -177,12 +165,6 @@ class MainActivity : PresenterBaseActivity(), MainView {
 
     }
 
-    /*
-    *  Determine if we should show empty.
-    * */
-    fun shouldShowEmptyView() {
-        emptyView.visibility = if (mainPresenter.getStatusListCount() == 0) View.VISIBLE else View.INVISIBLE
-    }
 
 
     companion object {

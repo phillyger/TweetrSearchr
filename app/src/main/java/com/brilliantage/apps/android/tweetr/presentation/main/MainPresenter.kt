@@ -42,8 +42,6 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
     override fun onStart() {
 
-
-
         if (!isAccessTokenAvailable) getToken()
     }
 
@@ -59,6 +57,10 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
         subscriptions += searchTweetsUseCase.searchTweets(query, maxId, includeEntities)
                 .applySchedulers()
                 .smartSubscribe(
+                        onStart = {
+                            view.progressBar = true
+                            view.emptyResults = false
+                        },
                         onSuccess = { (searchStatuses, searchMetadata) ->
 
                             // set start position for adapter dataset
@@ -77,8 +79,11 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
 
                         },
-                        onError = view::showError
-
+                        onError = view::showError,
+                        onFinish = {
+                            view.progressBar = false
+                            displayEmptyResultsView()
+                        }
                 )
 
     }
@@ -100,7 +105,9 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
         subscriptions += fetchTokenUseCase.getToken(authorization)
                 .applySchedulers()
                 .smartSubscribe(
-                        onStart = { },
+                        onStart = {
+                            view.progressBar = true
+                        },
                         onSuccess = { (tokenType, accessToken) ->
                             // write the token to the preferences - don't do this in production app!!
 
@@ -111,7 +118,9 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
                         },
                         onError = view::showError,
-                        onFinish = { }
+                        onFinish = {
+                            view.progressBar = false
+                        }
 
                 )
     }
@@ -213,8 +222,14 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
     /**
      * resets the search objects.
      */
-    fun resetSearch() {
+    fun clearSearchResults() {
         statusList.clear()
         metaData = null
+    }
+
+    private fun displayEmptyResultsView() {
+        val flag = if (statusList.size == 0) true else false
+        Log.d(TAG, "displayEmptyResultsView: $flag")
+        view.emptyResults = flag
     }
 }
