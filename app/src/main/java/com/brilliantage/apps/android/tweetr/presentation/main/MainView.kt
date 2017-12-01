@@ -10,6 +10,8 @@ import com.brilliantage.apps.android.tweetr.presentation.base.BaseView
  */
 interface MainView : BaseView {
 
+    var query:String
+
     fun updateUI(positionStart:Int, itemCount:Int)
 
 }
