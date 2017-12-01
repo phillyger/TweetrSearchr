@@ -39,6 +39,8 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
     private var statusList:ArrayList<Status> = ArrayList<Status>()
     private var metaData: SearchMetadata? = null
 
+    private var isEmptyResultsViewDisplayed:Boolean = true
+        get() =  if (statusList.size == 0) true else false
 
     override fun onStart() {
 
@@ -52,8 +54,6 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
      */
      fun searchTweets(query:String, maxId:String?, includeEntities:Boolean?) {
 
-
-        Log.d("MainPresenter", "searchTweets")
         subscriptions += searchTweetsUseCase.searchTweets(query, maxId, includeEntities)
                 .applySchedulers()
                 .smartSubscribe(
@@ -82,7 +82,7 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
                         onError = view::showError,
                         onFinish = {
                             view.progressBar = false
-                            displayEmptyResultsView()
+                            view.emptyResults = isEmptyResultsViewDisplayed
                         }
                 )
 
@@ -152,9 +152,7 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
     /**
      * returns a count of the objects in the status list (aka tweet count)
      */
-    fun getStatusListCount():Int {
-        return statusList.size
-    }
+    fun getStatusListCount():Int = statusList.size
 
     /**
      * setter for the status list
@@ -162,11 +160,6 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
     private fun setStatusList(list: List<Status>) {
         statusList.addAll(list)
     }
-
-    /**
-     * getter for the status list
-     */
-    fun getStatusList():List<Status> = statusList
 
     /**
      * setter for the meta data object
@@ -227,9 +220,6 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
         metaData = null
     }
 
-    private fun displayEmptyResultsView() {
-        val flag = if (statusList.size == 0) true else false
-        Log.d(TAG, "displayEmptyResultsView: $flag")
-        view.emptyResults = flag
-    }
+
+
 }
