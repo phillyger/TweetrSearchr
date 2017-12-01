@@ -90,12 +90,12 @@ class MainActivity : PresenterBaseActivity(), MainView {
     override fun updateUI(positionStart: Int, itemCount: Int) {
         // Update the search adapter dataset on the main UI thread
 
+        // TODO Remove these calls. Presenter should determine how this is handled.
         shouldShowEmptyView()
-
         progressView.visibility = View.INVISIBLE
         searchResultsView.visibility = View.VISIBLE
 
-
+        // TODO Refactor this code!!
         searchAdapter.notifyItemRangeInserted(positionStart, itemCount)
 
 
