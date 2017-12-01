@@ -49,7 +49,9 @@ dependencies {
     compile libs.timber
     compile libs.glide
     compile libs.circleimageview
+    compile libs.paper_parcel
     compile libs.activitystarter
+    kapt libs.paper_parcel_kapt
     kapt libs.activitystarter_kapt
 
     annotationProcessor libs.dagger_annotation

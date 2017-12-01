@@ -1,11 +1,14 @@
 package com.brilliantage.apps.android.tweetr.model.search
 
 import com.google.gson.annotations.SerializedName
+import paperparcel.PaperParcel
+import paperparcel.PaperParcelable
 
 /**
  * Created by gosullivan on 11/21/17.
  */
-class Entities(
+@PaperParcel
+data class Entities(
         @SerializedName("urls")
         val urls: List<Urls>,
 
@@ -13,9 +16,10 @@ class Entities(
         val hashtags: List<Hashtags>,
 
         @SerializedName("user_mentions")
-        val userMentions: List<UserMentions>,
+        val userMentions: List<UserMentions>
 
-        @SerializedName("symbols")
-        val symbols: List<Any>
-
-) 
+): PaperParcelable {
+        companion object {
+                @JvmField val CREATOR = PaperParcelEntities.CREATOR
+        }
+}

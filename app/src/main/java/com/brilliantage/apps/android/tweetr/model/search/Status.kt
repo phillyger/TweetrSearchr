@@ -1,10 +1,13 @@
 package com.brilliantage.apps.android.tweetr.model.search
 
 import com.google.gson.annotations.SerializedName
+import paperparcel.PaperParcel
+import paperparcel.PaperParcelable
 
 /**
  * Created by gosullivan on 11/21/17.
  */
+@PaperParcel
 data class Status(
 
         @SerializedName("metadata")
@@ -56,4 +59,8 @@ data class Status(
         @SerializedName("user")
         val user: User
 
-)
+): PaperParcelable {
+        companion object {
+                @JvmField val CREATOR = PaperParcelStatus.CREATOR
+        }
+}

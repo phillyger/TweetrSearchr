@@ -1,10 +1,13 @@
 package com.brilliantage.apps.android.tweetr.model.search
 
 import com.google.gson.annotations.SerializedName
+import paperparcel.PaperParcel
+import paperparcel.PaperParcelable
 
 /**
  * Created by gosullivan on 11/21/17.
  */
+@PaperParcel
 data class User(
 
         @SerializedName("friends_count")
@@ -104,4 +107,8 @@ data class User(
         @SerializedName("profile_sidebar_fill_color")
         val profileSidebarFillColor: String
 
-        )
+        ): PaperParcelable {
+        companion object {
+                @JvmField val CREATOR = PaperParcelUser.CREATOR
+        }
+}
