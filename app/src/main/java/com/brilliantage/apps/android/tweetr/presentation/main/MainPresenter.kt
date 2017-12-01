@@ -59,7 +59,6 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
         subscriptions += searchTweetsUseCase.searchTweets(query, maxId, includeEntities)
                 .applySchedulers()
                 .smartSubscribe(
-                        onStart = { },
                         onSuccess = { (searchStatuses, searchMetadata) ->
 
                             // set start position for adapter dataset
@@ -68,10 +67,6 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
                             // set the respective data field objects in presenter.
                             setStatusList(searchStatuses)
                             setMetadata(searchMetadata)
-
-//                            Log.d(TAG, "metadata nextresults:" + searchMetadata.nextResults)
-//                            Log.d(TAG , "tweet count is ${statusList.size}")
-//                            Log.d(TAG , "next results are ${metadata.nextResults}")
 
                             // add new results to list
                             val itemCount:Int = searchStatuses.size
@@ -82,8 +77,8 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
 
                         },
-                        onError = view::showError,
-                        onFinish = {}
+                        onError = view::showError
+
                 )
 
     }
@@ -136,6 +131,15 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
 
     }
 
+    fun onBindRepositoryRowViewAtPosition(position:Int, searchTweetRowView: SearchTweetsRowView) {
+
+        val status:Status = statusList[position]
+        searchTweetRowView.setUsername(status.user.name)
+        searchTweetRowView.setScreenname(status.user.screenName)
+        searchTweetRowView.setMainText(status.text)
+        searchTweetRowView.setUserProfileImageUrl(status.user.profileImageUrl)
+    }
+
     /**
      * returns a count of the objects in the status list (aka tweet count)
      */
@@ -181,8 +185,8 @@ open class MainPresenter(val view: MainView) : RxPresenter() {
                 val query =  it.nextResults.substring(startIndex = 1)
 
                 val splitQuery = splitQuery(query)
-                val q = (splitQuery.get(QUERY_PARAM_Q) as? String) ?: ""
-                val maxId = (splitQuery.get(QUERY_PARAM_MAX_ID) as? String) ?: ""
+                val q = splitQuery.get(QUERY_PARAM_Q) ?: ""
+                val maxId = splitQuery.get(QUERY_PARAM_MAX_ID)  ?: ""
 
                 searchTweets(q, maxId, true)
             }

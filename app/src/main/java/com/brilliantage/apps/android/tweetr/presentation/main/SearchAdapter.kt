@@ -21,9 +21,8 @@ class SearchAdapter(private val mainPresenter: MainPresenter) : RecyclerView.Ada
     override fun getItemCount() = mainPresenter.getStatusListCount()
 
     override fun onBindViewHolder(holder: SearchAdapter.SearchViewHolder, position: Int) {
-        val statusList = mainPresenter.getStatusList()
-        val itemStatus = statusList[position]
-        holder.bindStatus(itemStatus)  }
+        mainPresenter.onBindRepositoryRowViewAtPosition(position, holder)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.SearchViewHolder {
         val inflatedView = parent.inflate(R.layout.search_recycler_view_row_item, false)
@@ -31,20 +30,28 @@ class SearchAdapter(private val mainPresenter: MainPresenter) : RecyclerView.Ada
     }
 
     // View Holder
-    class SearchViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class SearchViewHolder(v: View) : RecyclerView.ViewHolder(v), SearchTweetsRowView {
 
         private val TAG:String = "SearchViewHolder"
 
         private var view: View = v
         private var status: Status? = null
 
-        fun bindStatus(status: Status) {
-            this.status = status
-
-            view.userProfileImageView.loadUrl(status.user.profileImageUrl)
-            view.userNameView.text = status.user.name
-            view.userScreenNameView.text = status.user.screenName
-            view.mainTextView.text = status.text
+        override fun setUsername(username: String) {
+            view.userNameView.text = username
         }
+
+        override fun setScreenname(screenName: String) {
+            view.userScreenNameView.text = screenName
+        }
+
+        override fun setMainText(mainText: String) {
+            view.mainTextView.text = mainText
+        }
+
+        override fun setUserProfileImageUrl(url: String) {
+            view.userProfileImageView.loadUrl(url)
+        }
+
     }
 }
